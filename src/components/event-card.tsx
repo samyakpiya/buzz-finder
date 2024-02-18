@@ -1,16 +1,41 @@
+"use client";
+
 import { BuzzEvent } from "@/lib/types";
+import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { useRef } from "react";
 
 type EventCardProps = {
   event: BuzzEvent;
 };
 
+const MotionLink = motion(Link);
+
 export default function EventCard({ event }: EventCardProps) {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["0 1", "1.5 1"],
+  });
+  const scaleProgress = useTransform(scrollYProgress, [0, 1], [0.8, 1]);
+  const opacityProgress = useTransform(scrollYProgress, [0, 1], [0.3, 1]);
+
   return (
-    <Link
+    <MotionLink
+      ref={ref}
       className="h-[380px] max-w-[500px] flex-1 basis-80"
       href={`/event/${event.slug}`}
+      style={{
+        // @ts-ignore
+        scale: scaleProgress,
+        // @ts-ignore
+        opacity: opacityProgress,
+      }}
+      initial={{
+        scale: 0.8,
+        opacity: 0,
+      }}
     >
       <section className="w-full h-full flex flex-col  bg-white/[3%] rounded-xl overflow-hidden relative hover:scale-105 active:scale-[1.02] transition">
         <Image
@@ -35,6 +60,6 @@ export default function EventCard({ event }: EventCardProps) {
           </p>
         </section>
       </section>
-    </Link>
+    </MotionLink>
   );
 }
