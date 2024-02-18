@@ -1,6 +1,6 @@
 "use client";
 
-import { BuzzEvent } from "@/lib/types";
+import { BuzzEvent } from "@prisma/client";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
